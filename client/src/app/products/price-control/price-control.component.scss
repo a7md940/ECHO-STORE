@@ -1,0 +1,91 @@
+$range_highligh: #748ffc;
+$range_dark: #364fc7;
+
+.price_control {
+  background-color: #4c6cf0;
+  form {
+    display: flex;
+
+    .range_wrapper {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      position: relative;
+
+      .range_line {
+        width: 100%;
+        height: 2px;
+        background-color: #5f00d7;
+      }
+      .first_range, .second_range {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        top: 50%;
+        background-color: #5f0000;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .first_range {
+        left: 0px;
+      }
+      .second_range {
+        right: 0px;
+      }
+    }
+  }
+}
+
+
+::ng-deep {
+  .price_control .ng5-slider .ng5-slider-bar {
+    background: #ffe4d1;
+    height: 2px;
+  }
+  .price_control .ng5-slider .ng5-slider-selection {
+    background: $range_highligh;
+  }
+
+  .price_control .ng5-slider .ng5-slider-pointer {
+    position: relative;
+    width: .6rem;
+    height: .6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: 0;
+    border-radius: 50%;
+    background-color: $range_dark;
+    border: 3px solid white;
+  }
+
+  .price_control .ng5-slider .ng5-slider-active {
+    box-shadow: 0px 0px 0px 4px rgba(255, 255, 255, .5);
+    outline: none;
+
+  }
+  .price_control .ng5-slider .ng5-slider-pointer:after {
+    display: none;
+  }
+
+  .price_control .ng5-slider .ng5-slider-bubble {
+    bottom: 14px;
+  }
+
+  .price_control .ng5-slider .ng5-slider-limit {
+    font-weight: bold;
+    color: $range_highligh;
+  }
+
+  .price_control .ng5-slider .ng5-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #ffe4d1;
+    top: -1px;
+  }
+
+  .price_control .ng5-slider .ng5-slider-tick.ng5-slider-selected {
+    background: orange;
+  }
+}

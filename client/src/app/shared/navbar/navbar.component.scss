@@ -1,0 +1,32 @@
+nav {
+    display: flex;
+    align-items: center;
+    // border-bottom: 1px solid #eee;
+
+    #logo {
+        display: flex;
+        
+        img {
+            width: 50%;
+        }
+    }
+    ul {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        li {
+            a {
+                padding: 1rem;
+            }
+            margin: 0rem .5rem;
+        }
+        &.app_links {
+            width: 60%;
+        }
+
+        &.social_links {
+            background-color: #fbfbfb;
+        }
+    }
+}

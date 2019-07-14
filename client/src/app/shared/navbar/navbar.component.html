@@ -1,0 +1,35 @@
+<div class="nav__wrapper">
+  <nav>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 d-flex justify-content-between">
+          <div id="logo">
+            <img src="/assets/images/logo_150.png" alt="ECHO STORE LOGO">
+          </div>
+          <ul class="app_links">
+            <li>
+              <a [routerLink]="['']">Home</a>
+            </li>
+            <li>
+              <a routerLink="/products">Products</a>
+            </li>
+            <li>
+              <a routerLink="/categories">Categories</a>
+            </li>
+          </ul>
+
+          <ul class="social_links">
+            <li>
+              <a href="https://www.linkedin.com/in/ahmed-atef-73b3b5b9/" target="_blank">LinkedIn</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+</div>
+
+<div id="breadcrumb">
+  <app-breadcrumb></app-breadcrumb>
+</div>

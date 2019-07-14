@@ -1,0 +1,39 @@
+<div class="product_wrapper">
+  <div class="product_body">
+    <div class="company">
+      <span>{{product.Company}}</span>
+    </div>
+    <div class="product_title mb-3">
+      <span>{{product.Product}}</span>
+      <span> - {{product.CPU}}</span>
+      <span> - {{product.RAM}}</span>
+      
+    <span> - {{product.Memory}}</span>
+    <span> - {{product.Inches}}</span>
+  </div>
+  <div class="product_details">
+    <div class="price">
+      <span class="font-weight-bold">Price: </span>
+      <span>{{product.Price | currency:USD}}</span>
+    </div>
+
+    <div class="graphics">
+      <span class="font-weight-bold">GPU: </span>
+      <span>{{product.Graphics}}</span>
+    </div>
+    <div class="operating_system">
+        <span class="font-weight-bold">OS: </span>
+      <span>{{product.OpSys}}</span>
+    </div>
+    <div class="resolution">
+        <span class="font-weight-bold">Resolution: </span>
+      <span>{{product.Resolution}}</span>
+    </div>
+    <div class="type">
+        <span class="font-weight-bold">Type: </span>
+      <span>{{product.Type}}</span>
+    </div>
+    <div class="weight"><span>{{product.Weight}}</span></div>
+  </div>
+</div>
+</div>

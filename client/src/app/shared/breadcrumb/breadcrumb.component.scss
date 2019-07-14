@@ -1,0 +1,23 @@
+@import './../../../assets/styles/colors';
+
+.breadcrumb {
+    padding: .3rem 1rem;
+    background-color: $bg_light;
+    border-top: 1px solid $border_grey;
+    border-bottom: 1px solid $border_grey;
+    display: flex;
+    align-items: center;
+
+    p {
+        span {
+            display: inline-block;
+            margin: 0rem .4rem;
+            color: $text_dark;
+            cursor: pointer;
+            
+            &.last_url {
+                color: $text_light;
+            }
+        }
+    }
+}

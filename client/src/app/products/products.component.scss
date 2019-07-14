@@ -1,0 +1,16 @@
+#product_wrapper {
+    .container {
+        .row {
+            .col-12 {
+                display: flex;
+                .filter_sidebar {
+                    flex-basis: 20%;
+                }
+                .product_list {
+                    flex-grow: 2;
+                    background-color: #eee;
+                }
+            }
+        }
+    }
+}

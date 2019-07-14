@@ -1,0 +1,16 @@
+<div class="breadcrumb" *ngIf="router.url != '/'">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <p class="my-0">
+          <span routerLink="/">Home</span>
+          <span class="icon-right-arrow">></span>
+          <ng-container *ngFor="let url of urlSegmants; let i = index;">
+            <span [class.last_url]="i == (urlSegmants.length - 1)">{{url}}</span>
+            <span class="icon-right-arrow" *ngIf="i != (urlSegmants.length - 1)">></span>
+          </ng-container>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

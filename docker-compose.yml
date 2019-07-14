@@ -1,0 +1,45 @@
+version: '3'
+services:
+
+  backend:
+    build:
+      dockerfile: Dockerfile
+      context: ./server
+    ports:
+      - '3000:3000'
+    volumes:
+      - '/app/node_modules'
+      - './server:/app'
+    links:
+     - mongo
+
+  frontend:
+      build:
+        dockerfile: Dockerfile
+        context: ./client
+      ports:
+        - '5000:5000'
+      volumes:
+        - '/client/node_modules'
+        - './client:/client'
+  
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - '27017:27017'
+
+  mongodb:
+    build:
+      dockerfile: Dockerfile
+      context: ./db
+    links:
+      - mongo
+
+  nginx:
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - '8080:80'
+    restart: always

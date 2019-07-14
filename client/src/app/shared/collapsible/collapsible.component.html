@@ -1,0 +1,11 @@
+<div class="collapse_wrapper">
+  <div class="collapse_icon">
+    <span (click)="toggle()">Toggle</span>
+    <span *ngIf="title">{{title}}</span>
+  </div>
+  <div class="collapse_content" [ngStyle]="{
+    'height': isHidden ? '0px' : height+'px'
+  }">
+    <ng-content></ng-content>
+  </div>
+</div>

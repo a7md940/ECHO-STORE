@@ -1,0 +1,58 @@
+@import './../../../assets/styles/colors';
+
+.product_wrapper {
+    margin: 1rem .3rem;
+        position: relative;
+    box-shadow: 0px 4px 3px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+
+    .product_body{
+        background: white;
+        padding: 1rem;
+        position: relative;
+        z-index: 2;
+
+        .company {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: .5rem;
+            span {
+                border: 1px solid $blue;
+                font-weight: bold;
+                color: $blue;
+                border-radius: 5px;
+                font-size: .7rem;
+                padding: .1rem .5rem;
+            }
+        }
+
+        .product_title {
+            font-size: 1rem;
+            line-height: 18px;
+            font-weight: bold;
+        }
+
+        .product_details {
+            font-size: .8rem;
+            .weight {
+                display: flex;
+                justify-content: flex-end;
+
+                span {
+                    font-weight: bold;
+                    font-size: .7rem;
+                    color: white;
+                    background-color: #5F65AF;
+                    border-radius: 5px;
+                    padding: .1rem .5rem;
+                }
+            }
+        //    & > div {
+        //        display: flex;
+        //        justify-content: space-between;
+        //        align-items: center;
+        //    }
+        }
+    }
+}

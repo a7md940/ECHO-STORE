@@ -1,0 +1,19 @@
+@import './../../../assets/styles/colors';
+
+.collapse_wrapper {
+    padding-bottom: .3rem;
+    border-bottom: 1px solid $border_grey; 
+    .collapse_icon {
+        display: flex;
+        justify-content: space-between;
+        span {
+            display: inline-block;
+            cursor: pointer;
+            user-select: none;
+        }
+    }
+    .collapse_content {
+        transition: height .2s ease-in-out;
+        overflow: hidden;
+    }
+}
