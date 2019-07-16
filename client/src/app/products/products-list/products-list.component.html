@@ -3,8 +3,8 @@
     <ng-container *ngIf="(products)?.length">
       <div class="row" 
       infiniteScroll 
-      [infiniteScrollDistance]=".01" 
-      [infiniteScrollThrottle]="50" 
+      [infiniteScrollDistance]="1" 
+      [infiniteScrollThrottle]="100" 
       (scrolled)="paginateOnScroll.emit(true)">
         <div class="col-12 col-md-6 col-lg-4" *ngFor="let product of products">
             <app-product [product]="product"></app-product>

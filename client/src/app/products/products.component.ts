@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ComputerService } from './../core/services/computer.service';
 import { ComputerFilter, Filter } from 'src/app/shared/models/computer-filter';
+import { filterLogic } from 'src/app/shared/models/enums/filter-logic';
 
 @Component({
   selector: 'app-products',
@@ -46,17 +47,19 @@ export class ProductsComponent implements OnInit {
       skip,
       take: this.pageSize,
       filter,
-      filterLogic: 2
+      filterLogic: filter.length == 1 ? null : filterLogic.and
     }
     this.filters = queryFilter;
     this.computerSevice.getComputers(this.filters)
     .subscribe((resp) => {
       this.computers.splice(0, this.computers.length);
+      console.log(this.computers)
       resp.forEach(computer => {
         this.computers.push(computer);
       })
     })
   }
+
   getProductsOnScroll() {
     console.log('#1 scroll with filter fires()')
     this.onScrollPaginationCounter++;

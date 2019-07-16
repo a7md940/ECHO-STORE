@@ -1,13 +1,18 @@
 <div id="sidebar_wrapper">
   <div class="filter_box" *ngFor="let filter of filters">
       <app-collapsible [title]="filter.name">
+        
+        <!-- (filter.type == 2) ====> Range Input for Price -->
+        <ng-container *ngIf="filter.type == 2">
+          <app-price-control></app-price-control>
+        </ng-container>
         <ul *ngIf="filter.type == 1">
           <li *ngFor="let control of filter.controls" class="input_box">
             <input type="checkbox" [name]="filter.name" [value]="control"
             [id]="control" (change)="getFilter($event, filter.name, control)">
             <label [for]="control">
               {{control}} 
-              <span *ngIf="filter.name == 'RAM'">GB</span>
+              <!-- <span *ngIf="filter.name == 'RAM'">GB</span> -->
               <span *ngIf="filter.name == 'inches'">Inche</span>
             </label>
           </li>

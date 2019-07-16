@@ -25,7 +25,7 @@ export class FilterSidebarComponent implements OnInit {
     {
       name: 'RAM',
       type: filterTypes.checkbox,
-      controls: [8, 6, 4, 12, 14, 16],
+      controls: [8, 6, 4, 12, 14, 16].map(x => x.toString()),
     },
     {
       name: 'OpSys',
@@ -35,12 +35,12 @@ export class FilterSidebarComponent implements OnInit {
     {
       name: 'CPU',
       type: filterTypes.checkbox,
-      controls: ["intel core i7", "inter core i5", "intel core i3"],
+      controls: ["i7", "i5", "i3"],
     },
     {
       name: 'inches',
       type: filterTypes.checkbox,
-      controls: [15.5, 16.8, 21, 30],
+      controls: [13.3, 15.6, 16.8, 21, 30],
     }
   ]
 

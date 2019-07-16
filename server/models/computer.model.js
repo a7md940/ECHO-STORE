@@ -14,7 +14,7 @@ const computerSchema = new mongoose.Schema({
         required: true
     },
     Inches: {
-        type: String,
+        type: Number,
         required: true
     },
     Resolution: {
