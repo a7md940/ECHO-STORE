@@ -40,8 +40,17 @@ const computerSchema = new mongoose.Schema({
     CompanyId: {
         type: mongoose.Types.ObjectId,
         ref: 'companies'
-    }
+    },
+    ram_cap: {
+        type: Number,
+        required: false
+    },
+    cpu_cores: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'processor'
+    },
 });
+computerSchema.index({ Product: 'text', Company: 'text'})
 const Computer = mongoose.model('computers', computerSchema);
 
 module.exports = {

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, ActivationEnd } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd, ActivationEnd, Scroll, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterService } from 'src/app/core/services/router.service';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -10,14 +12,15 @@ export class BreadcrumbComponent implements OnInit {
   urlSegmants: Array<any>;
 
   constructor(
+    private routerService: RouterService,
     public router: Router
   ) { }
 
   ngOnInit() {
-    this.router.events.subscribe(events => {
-      if (events instanceof ActivationEnd) {
-        this.urlSegmants = events.snapshot.url.map(url => url.path);
-      }
+    this.routerService.routerState$.pipe(distinctUntilChanged()).subscribe(shanpShot => {
+      const urls = shanpShot.root.children.map(shot => shot.url.map(u => u.path))
+      this.urlSegmants = urls
+      console.log('URL Segmants: ', this.urlSegmants.join())
     });
   }
 

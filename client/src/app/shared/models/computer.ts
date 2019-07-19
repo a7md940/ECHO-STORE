@@ -13,3 +13,7 @@ export interface Computer {
     Weight: string;
     _id: string;
 }
+export interface ComputerDTO {
+    count?: number;
+    computers: Array<Computer>
+}

@@ -1,13 +1,40 @@
+<div id="breadcrumb" *ngIf="!(route.queryParam | async)">
+  <app-breadcrumb>
+    <div class="search_input">
+      <div class="input_wrapper">
+        <form [formGroup]="searchForm" (ngSubmit)="search()" *ngIf="!(route.queryParams | async).q">
+
+          <input type="text" formControlName="text">
+          <input type="text" formControlName="Company">
+          <input type="submit" value="search">
+
+        </form>
+      </div>
+    </div>
+  </app-breadcrumb>
+</div>
+
+
 <div id="product_wrapper">
   <div class="container">
     <div class="row">
       <div class="col-12">
         <div class="col-2">
           <div class="filter_sidebar">
-            <app-filter-sidebar (filterValue)="getProducts($event)"></app-filter-sidebar>
+            <app-filter-sidebar (filterValue)="setFilter($event)"></app-filter-sidebar>
           </div>
         </div>
         <div class="col-10">
+          <div class="search_result" *ngIf="filters.filter.length">
+              <div class="search_result__title">
+                <p class="my-0" *ngIf="(route.queryParams | async).q">
+                  You Have searched for {{ (route.queryParams | async).q }}
+                  </p>
+              </div>
+              <p class="my-0">
+                {{ productsState.resultCount }} products found
+              </p>
+          </div>
           <div class="product_list">
             <app-products-list *ngIf="(computers)?.length" [products]="computers"
             (paginateOnScroll)="getProductsOnScroll()"></app-products-list>

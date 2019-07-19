@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ComputerFilter } from 'src/app/shared/models/computer-filter';
-import { Computer } from 'src/app/shared/models/computer';
+import { Computer, ComputerDTO } from 'src/app/shared/models/computer';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class ComputerService {
   ) { }
 
   getComputers(queryFilter: ComputerFilter) {
-    return this.http.post<Array<Computer>>(`${environment.url}/computers`, queryFilter);
+    return this.http.post<ComputerDTO>(`${environment.url}/computers`, queryFilter);
   }
 
   getAllComputers(skip: number, take: number) {

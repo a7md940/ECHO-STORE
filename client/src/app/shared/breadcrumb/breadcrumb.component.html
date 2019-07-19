@@ -2,14 +2,24 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <p class="my-0">
+        <div class="d-flex justify-content-start align-items-center">
           <span routerLink="/">Home</span>
-          <span class="icon-right-arrow">></span>
+          <!-- <span class="icon-right-arrow"></span> -->
           <ng-container *ngFor="let url of urlSegmants; let i = index;">
-            <span [class.last_url]="i == (urlSegmants.length - 1)">{{url}}</span>
-            <span class="icon-right-arrow" *ngIf="i != (urlSegmants.length - 1)">></span>
+            <!-- if it's last url don't take arrow icon-->
+            <ng-container *ngIf="i == (urlSegmants.length - 1) && urlSegmants.length == 1">
+              <span [class.last_url]="i == (urlSegmants.length - 1)">{{url}}</span>
+            </ng-container>
+
+            <!-- if it's not last url take arrow icon with it -->
+            <ng-container *ngIf="urlSegmants.length > 1 && i !== (urlSegmants.length - 1)">
+                <span>{{url}}</span>
+                <span class="icon-right-arrow" ></span>
+            </ng-container>
           </ng-container>
-        </p>
+
+          <ng-content></ng-content>
+        </div>
       </div>
     </div>
   </div>

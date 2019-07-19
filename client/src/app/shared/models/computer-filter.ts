@@ -11,5 +11,6 @@ export interface ComputerFilter {
     take?: number;
     skip?: number;
     filter?: Array<Filter>;
-    filterLogic?: filterLogic
+    filterLogic?: filterLogic;
+    searchText?: Array<string>;
 }
