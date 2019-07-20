@@ -1,6 +1,6 @@
 /**
- * tell if it's and query option
- * @param {object} query An object has array of criteria filters
+ * tell if it's $and query operator
+ * @param {object} queryFilter An Array of criteria filters
  * @return {boolean} A boolean that tell if it's an and logical query operation
  */
 const isAndLogic = (query) => Array.isArray(query.filter) && query.filterLogic == 2
@@ -8,7 +8,8 @@ const isAndLogic = (query) => Array.isArray(query.filter) && query.filterLogic =
 /**
  * Builds Query Object With $and Operator
  * @param {Array} filterArray An Array have object search criteria
- * @return {object} A query object like { fieldName: { $in : [...values] } }
+ * @param {object} query the object query to build
+ * @return {object} A query object like {$and:  : { fieldName: { $in : [...values] }, field2: {$in : [...values] } } }
  */
 function make$andQuery(filterArray, query) {
     // clone arr to avoid side effects.
@@ -37,14 +38,13 @@ function make$andQuery(filterArray, query) {
         console.log(query[fieldName].$in)
         return query
     })
-    console.log('reeeeeeeeeeeeeeeeeesutl', result)
     query.$and = result
-     return result;  
+     return { $and: result };  
 };
 
 /**
  * tell if it's single query object
- * @param {object} query An object has array of criteria filters
+ * @param {object} query An object has filterLogic property
  * @return {boolean} A boolean that tell if it's a single query object
  */
 const noLogicInQuery = (queryOptions) => !queryOptions.filterLogic

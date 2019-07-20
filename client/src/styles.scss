@@ -4,3 +4,13 @@
 body {
     background-color: #F1F2F5;
 }
+
+html {
+    @media (max-width: 425) {
+        font-size: 14px;
+        body {
+            font-size: 14px;
+        }
+    }
+
+}

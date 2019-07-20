@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-// Helpers
-// require('./helpers/string.helper')
 
 const app = require('./app')
 

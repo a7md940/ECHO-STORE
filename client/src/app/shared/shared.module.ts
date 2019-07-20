@@ -7,8 +7,9 @@ import { CollapsibleComponent } from './collapsible/collapsible.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 @NgModule({
-  declarations: [NavbarComponent, BreadcrumbComponent, CollapsibleComponent, LoadingSpinnerComponent],
+  declarations: [NavbarComponent, BreadcrumbComponent, CollapsibleComponent, LoadingSpinnerComponent, ScrollToTopComponent],
   imports: [
     RouterModule,
     CommonModule,
@@ -23,7 +24,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     InfiniteScrollModule,
     ReactiveFormsModule,
     BreadcrumbComponent,
-    FormsModule
+    FormsModule,
+    ScrollToTopComponent
   ]
 })
 export class SharedModule { }
