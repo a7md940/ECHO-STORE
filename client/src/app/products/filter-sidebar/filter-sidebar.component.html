@@ -1,7 +1,7 @@
 <div id="sidebar_wrapper">
   <form  #filterForm="ngForm">
-    <div class="filter_box" *ngFor="let filter of filters">
-        <app-collapsible [title]="filter.name">
+    <div class="filter_box" *ngFor="let filter of filters; let i = index">
+        <app-collapsible [title]="filter.name" [openByDefault]="i < 2">
           
           <!-- (filter.type == 2) ====> Range Input for Price -->
           <ng-container *ngIf="filter.type == 2">
@@ -13,13 +13,25 @@
               <fieldset [name]="filter.name" [ngModelGroup]="filter.name">
               <ng-container *ngFor="let control of filter.controls; let i = index">
                 <div class="input_checkbox">
-                  <input type="checkbox"  [name]="control"  ngModel [value]="control"
-                  [id]="control" (change)="setFilter($event, filter.name, filter.name == 'cpu_cores' ? control.id : control)">
-                  <label [for]="control">
-                    {{filter.name == 'cpu_cores' ? control.family : control}} 
-                    <span *ngIf="filter.name == 'ram_cap'">GB</span>
-                    <span *ngIf="filter.name == 'inches'">Inche</span>
-                  </label>
+                  <!-- For CPU_CORES GROUP -->
+                  <ng-container *ngIf="filter.name == 'cpu_cores'">
+                  <input *ngIf="control.family" type="checkbox"  [name]="control.family"  ngModel [value]="control.id"
+                  [id]="control.family" (change)="setFilter($event, filter.name, filter.name == 'cpu_cores' ? control.id : control)">
+                  <label [for]="control.family" class="ml-2">
+                      {{filter.name == 'cpu_cores' ? control.family : control}} 
+                    </label>
+                  </ng-container>
+
+                  <!-- FOR NON-CPU_CORES GROUP -->
+                  <ng-container *ngIf="filter.name !== 'cpu_cores'">
+                    <input type="checkbox" *ngIf="control"  [name]="control"  ngModel [value]="control"
+                    [id]="control" (change)="setFilter($event, filter.name, filter.name == 'cpu_cores' ? control.id : control)">
+                    <label [for]="control" class="ml-2">
+                      {{control}}
+                      <span *ngIf="filter.name == 'ram_cap'">GB</span>
+                      <span *ngIf="filter.name == 'inches'">Inche</span>
+                    </label>
+                  </ng-container>
                 </div>
               </ng-container>
             </fieldset>

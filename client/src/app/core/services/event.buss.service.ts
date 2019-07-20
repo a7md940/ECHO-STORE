@@ -8,7 +8,8 @@ export interface _Event {
   value: any;
 }
 
-export type EventTypes = 'clearSearchText' | 'searchTextTrigger'
+export type EventTypes = 'clearSearchText' | 'searchTextTrigger' | 'getCPUS'
+| 'searchTagCleared'
 @Injectable({
     providedIn: 'root'
   })

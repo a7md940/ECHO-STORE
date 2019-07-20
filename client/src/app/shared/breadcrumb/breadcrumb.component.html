@@ -1,24 +1,29 @@
 <div class="breadcrumb" *ngIf="router.url != '/'">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <div class="d-flex justify-content-start align-items-center">
-          <span routerLink="/">Home</span>
-          <!-- <span class="icon-right-arrow"></span> -->
-          <ng-container *ngFor="let url of urlSegmants; let i = index;">
-            <!-- if it's last url don't take arrow icon-->
-            <ng-container *ngIf="i == (urlSegmants.length - 1) && urlSegmants.length == 1">
-              <span [class.last_url]="i == (urlSegmants.length - 1)">{{url}}</span>
-            </ng-container>
-
-            <!-- if it's not last url take arrow icon with it -->
-            <ng-container *ngIf="urlSegmants.length > 1 && i !== (urlSegmants.length - 1)">
-                <span>{{url}}</span>
-                <span class="icon-right-arrow" ></span>
-            </ng-container>
-          </ng-container>
-
-          <ng-content></ng-content>
+        <div class="d-flex justify-content-start align-items-center" id="bread_crumb__container">
+          <div class="bread_crumb__links">
+              <a routerLink="/">Home</a>
+              <!-- <span class="icon-right-arrow"></span> -->
+              <ng-container *ngFor="let url of urlSegmants; let i = index;">
+                <!-- if it's last url don't take arrow icon-->
+                <ng-container *ngIf="i == (urlSegmants.length - 1) && urlSegmants.length == 1">
+                  <span class="icon-right-arrow mx-1" style="font-size: .7rem"></span>
+                  <a [routerLink]="'/'+url" [class.last_url]="i == (urlSegmants.length - 1)" >{{url}}</a>
+                </ng-container>
+    
+                <!-- if it's not last url take arrow icon with it -->
+                <ng-container *ngIf="urlSegmants.length > 1 && i !== (urlSegmants.length - 1)">
+                  <a routerLink="{{url}}" >{{url}}</a>
+                  <span class="icon-right-arrow" ></span>
+                </ng-container>
+              </ng-container>
+    
+          </div>
+          <div class="bread_crumb__content">
+            <ng-content></ng-content>
+          </div>
         </div>
       </div>
     </div>

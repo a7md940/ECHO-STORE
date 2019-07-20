@@ -38,10 +38,9 @@ module.exports = {
         res.send({computers, count});
     },
     async index(req, res) {
-        console.log('index triggers')
         const {take, skip} = req.query;
         const options = {skip: +skip, limit: +take};
         // const options = null;
-        res.send(await Computer.find({$text: {$search: 'microsoft'}}, null, options))
+        res.send(await Computer.find({}, null, options))
     }
 }

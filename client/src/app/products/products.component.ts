@@ -1,21 +1,25 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ComputerService } from './../core/services/computer.service';
 import { ComputerFilter, Filter } from 'src/app/shared/models/computer-filter';
 import { filterLogic } from 'src/app/shared/models/enums/filter-logic';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { EventBuss } from '../core/services/event.buss.service';
-import { skipWhile, takeWhile } from 'rxjs/operators'
+import { skipWhile, takeWhile, takeUntil } from 'rxjs/operators'
 import { ComputerDTO } from '../shared/models/computer';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent implements OnInit, AfterViewInit {
+export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   computers: Array<any>;
   pageSize = 12;
   onScrollPaginationCounter = 1;
+
+  stopOnScrollQueryParamsListener = new Subject()
+  destroyObs$ = new Subject()
 
   filters: ComputerFilter = {
     skip: 0,
@@ -30,12 +34,10 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     faild: false,
     resultCount: 0
   }
-
   productsWithoutFilterCleaded: number = 0; // 0 --> not cleared : 1 --> cleared.
-
-
   searchForm: FormGroup
-  
+  processors: Array<{family: string; _id: string;}>
+  searchTags: Array<any> = []
   constructor(
     private computerSevice: ComputerService,
     public route: ActivatedRoute,
@@ -44,12 +46,23 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     private router: Router
   ) { }
 
+  private resetSearchCriteria() {
+    this.filters.filter = []
+    this.filters.filterLogic = null
+    this.filters.skip = 0
+    this.filters.take = this.pageSize
+
+    this.stopOnScrollQueryParamsListener.next(false)
+    this.stopOnScrollQueryParamsListener.complete()
+  }
   ngOnInit() {
     this.buildSearchForm()
+    this.getProcessorsForSearchTags()
 
     this.route.queryParams.subscribe(query => {
       if (query) {
-        this.filters.filter = []
+        this.resetSearchCriteria()
+        
         if (query.q && query.c) {
           this.filters.searchText = [query.q, query.c]
         }
@@ -64,18 +77,17 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       }
     })
       
-    // this.computerSevice.getAllComputers(0, this.pageSize)
-    //     .subscribe((computers: Array<any>) => {
-    //       this.computers = computers;
-    //       console.log({computers})
-    //       this.productsState.loading = false;
-    //       this.productsState.loaded = true;
-    //     })
     this.getAllComputers()
   }
 
+  private getProcessorsForSearchTags() {
+    this.eBuss.on('getCPUS').pipe(takeUntil(this.destroyObs$) ).subscribe((processors) => {
+      this.processors = processors
+    })
+  }
+
   getAllComputers() {
-    this.route.queryParams.subscribe(query => {
+    this.route.queryParams.pipe(takeUntil(this.stopOnScrollQueryParamsListener)).subscribe(query => {
       const { q, c }= query
       if (!q && !c) {
         this.productsState.loading = true;
@@ -83,7 +95,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         this.computerSevice.getAllComputers(skip, this.pageSize)
         .subscribe((computers: Array<any>) => {
           this.computers = computers;
-          console.log({computers})
           this.productsState.loading = false;
           this.productsState.loaded = true;
         })
@@ -92,18 +103,22 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       }
     })
   }
+
+
   ngAfterViewInit() {
-    // this.watchFilterSearchToEmitEventWhenClear()
+    const overlay = document.querySelector('.overlay') as HTMLDivElement
+    overlay.addEventListener('click', (e) => {
+      const label = document.getElementById('filter_sidebar_icon') as HTMLLabelElement
+      label.click()
+    })
+
   }
 
-  // watchFilterSearchToEmitEventWhenClear() {
-  //   this.searchForm.get('text').valueChanges.pipe(skipWhile(text =>!!text))
-  //   .subscribe(text => {
-  //     if (!text) {
-  //       this.eBuss.emit('clearSearchText', true)
-  //     }
-  //   })
-  // }
+  ngOnDestroy() {
+    this.destroyObs$.next(null)
+    this.destroyObs$.complete()
+  }
+
 
   buildSearchForm() {
     this.searchForm = this.fb.group({
@@ -124,17 +139,23 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       }
       return
     }
-
     // reset all filters, to search with new text
     this.filters.filter = []
 
     let {text, Company} = this.searchForm.value
     text = text.trim().toLowerCase()
     Company = Company.trim().toLowerCase()
-
+    const queryParams = {}
+    if (text) {
+      queryParams['q'] = text
+    }
+    if (Company) {
+      queryParams['c'] = Company
+    }
+    
     // reassign filters array to reset filter criteria
     this.eBuss.emit('searchTextTrigger',  true)
-    this.router.navigate(this.route.snapshot.url, { queryParams: {q: text, c: Company }})
+    this.router.navigate(this.route.snapshot.url, { queryParams })
     console.log(this.filters)
     // this.getProductsByFilter()
   }
@@ -169,15 +190,63 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     } else if (this.thereIsAnotherFilterOptionsComming(filter) && !this.isSearchFilterExist()) {
       this.filters = queryFilter
     } else if (!this.thereIsAnotherFilterOptionsComming(filter) && !this.isSearchFilterExist()) {
-      this.computerSevice.getAllComputers(this.filters.skip, this.filters.take)
+      this.computerSevice.getAllComputers(this.filters.skip, this.filters.take).subscribe((computers) => {
+        this.computers.splice(0, this.computers.length - 1)
+        computers.forEach(computer => this.computers.push(computer))
+      })
+      this.filters.filter = []
+      this.buildFilterTags()
       return
     }
-    console.log(this.filters)
     this.getProductsByFilter()
+    this.buildFilterTags()
   }
 
+  private buildFilterTags() {
+    console.log(this.filters.filter)
+    this.searchTags = this.filters.filter.map((filter, i, self) => {
+      const processor = this.processors.find(processor => processor._id == filter.value)
+
+      if (processor) {
+        return { value: processor.family, field: filter.field, realValue: processor._id, controlName: processor.family }
+      } else if ( filter.field == 'ram_cap') {
+        return { value: filter.value + 'GB', field: filter.field, realValue:filter.value, controlName: filter.value}
+      } else if (filter.field == 'Inches') {
+        return { value: filter.value + 'inch', field: filter.field, realValue:filter.value, controlName: filter.value }
+      } else {
+        return { value: filter.value, field: filter.field, realValue:filter.value, controlName: filter.value }
+      }
+    })
+  }
+
+  clearSearchCiteriaByTag(tag) {
+    this.eBuss.emit('searchTagCleared', {tag, filters: this.filters})
+    let filterObj;
+    if (tag.realValue) { // it's cpu tag
+      filterObj = this.filters.filter.find(x => x.value == tag.realValue)
+    } else {
+      filterObj = this.filters.filter.find(x => x.value == tag.value)
+    }
+    if (filterObj && tag.realValue) {
+      this.filters.filter = this.filters.filter.filter(f => f.value !== tag.realValue)
+    } else if (filterObj && !tag.realValue) {
+      this.filters.filter = this.filters.filter.filter(f => f.value !== tag.value)
+    }
+
+    this.searchTags = this.searchTags.filter(t => t.value !== tag.value)
+
+    // if (tag.realValue) {
+    //   this.searchTags = this.searchTags.filter(t => t.value !== tag.realValue)
+    // } else {
+    //   this.searchTags = this.searchTags.filter(t => t.value !== tag.value)
+    // }
+    this.getProductsByFilter()
+  }
   
   getProductsByFilter() {
+    if (this.filters.filter.length < 2) {
+      this.filters.filterLogic = null
+    }
     this.computerSevice.getComputers(this.filters)
     .subscribe((resp: ComputerDTO) => {
       if (Array.isArray(this.computers) && this.computers.length) {
@@ -188,20 +257,17 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         this.productsState.resultCount = resp.count
         this.computers = resp.computers
       }
-      console.log(this.computers)
     })
   }
 
   getProductsOnScroll() {
-    console.log('#1 scroll with filter fires()')
     if (this.computers.length < this.pageSize) {
       return
     }
     this.onScrollPaginationCounter++;
     
-    this.route.queryParams.subscribe((queryParams) => {
+    this.route.queryParams.pipe(takeUntil(this.stopOnScrollQueryParamsListener)).subscribe((queryParams) => {
       if (!this.filters.filter.length && !queryParams.q && !queryParams.c ) {
-        console.log('api without filters', queryParams)
         const skip = (this.onScrollPaginationCounter - 1) * this.pageSize;
         this.productsState.loading = true;
         this.computerSevice.getAllComputers(skip, this.pageSize)
@@ -213,7 +279,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
           })
         });
       } else {
-        console.log('scroll with filter fires()')
         this.filters.skip = (this.onScrollPaginationCounter - 1 ) * this.pageSize
         this.filters.take = this.pageSize
         this.computerSevice.getComputers(this.filters)

@@ -2,48 +2,86 @@
   <app-breadcrumb>
     <div class="search_input">
       <div class="input_wrapper">
-        <form [formGroup]="searchForm" (ngSubmit)="search()" *ngIf="!(route.queryParams | async).q">
+        <form
+          [formGroup]="searchForm"
+          (ngSubmit)="search()"
+          *ngIf="!(route.queryParams | async)?.q && !(route.queryParams | async)?.c"
+        >
+        <div class="input__wrapper">
+          <input type="text" formControlName="text" placeholder="Search by computer name"
+          [ngClass]="{
+            'border__error': searchForm.invalid && searchForm.get('text').touched
+          }"
+          />
+        </div>
+        <div class="input__wrapper">
+          <input type="text" formControlName="Company" placeholder="Search by company name"
+          [ngClass]="{
+            'border__error': searchForm.invalid && searchForm.get('Company').touched
+          }"
+          />
+        </div>
 
-          <input type="text" formControlName="text">
-          <input type="text" formControlName="Company">
-          <input type="submit" value="search">
-
+        <div class="submit__wrapper">
+          <input type="submit" value="search" />
+        </div>
         </form>
       </div>
     </div>
   </app-breadcrumb>
 </div>
 
-
 <div id="product_wrapper">
-  <div class="container">
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-12 offset-md-3 col-md-8 col-lg-9 offset-lg-2">
+            <div class="text-center">
+                <div class="search_result" *ngIf="filters.filter.length || (route.queryParams | async).q || (route.queryParams | async).c">
+                    <p class="search_result__title my-0" *ngIf="(route.queryParams | async).q || (route.queryParams | async).c" >
+                      You Have searched for "{{ (route.queryParams | async).q ? (route.queryParams | async).q : (route.queryParams | async).c }}"
+                    </p>
+                    <p class="my-0 result__count">({{ productsState.resultCount }} products found)</p>
+                  </div>
+            </div>
+          </div>
+    </div>
     <div class="row">
       <div class="col-12">
-        <div class="col-2">
-          <div class="filter_sidebar">
-            <app-filter-sidebar (filterValue)="setFilter($event)"></app-filter-sidebar>
+        <div class="row">
+          <label for="toggle_filter" id="filter_sidebar_icon">
+            <span class="icon-filter"></span>
+          </label>
+          <input type="checkbox" hidden id="toggle_filter">
+          <div class="overlay"></div>
+          <div class="col-2 filter__container">
+            <div class="filter_sidebar">
+              <app-filter-sidebar
+                (filterValue)="setFilter($event)"
+              ></app-filter-sidebar>
+            </div>
+          </div>
+          <div class="col-12 col-md-8 col-lg-9 product_list__container">
+  
+
+            <div class="search_tags">
+              <span class="search__tag" *ngFor='let tag of searchTags'>
+                <span class="clear__tag" (click)="clearSearchCiteriaByTag(tag)">X</span>
+                {{tag.value}}
+              </span>
+            </div>
+            <div class="product_list">
+              <app-products-list
+                *ngIf="computers?.length"
+                [products]="computers"
+                (paginateOnScroll)="getProductsOnScroll()"
+              ></app-products-list>
+              <app-loading-spinner
+                *ngIf="productsState.loading"
+              ></app-loading-spinner>
+            </div>
           </div>
         </div>
-        <div class="col-10">
-          <div class="search_result" *ngIf="filters.filter.length">
-              <div class="search_result__title">
-                <p class="my-0" *ngIf="(route.queryParams | async).q">
-                  You Have searched for {{ (route.queryParams | async).q }}
-                  </p>
-              </div>
-              <p class="my-0">
-                {{ productsState.resultCount }} products found
-              </p>
-          </div>
-          <div class="product_list">
-            <app-products-list *ngIf="(computers)?.length" [products]="computers"
-            (paginateOnScroll)="getProductsOnScroll()"></app-products-list>
-            <app-loading-spinner *ngIf="productsState.loading"></app-loading-spinner>
-          </div>
-        </div>
-        
       </div>
     </div>
   </div>
-
 </div>

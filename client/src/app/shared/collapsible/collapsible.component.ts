@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, AfterContentInit, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterContentInit, AfterViewInit, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-collapsible',
@@ -9,8 +9,10 @@ export class CollapsibleComponent implements OnInit, AfterContentInit, AfterView
   height: number;
   isHidden = false;
   @Input() title: string;
+  @Input() openByDefault: boolean
   @Output() expanded = new EventEmitter();
 
+  @ViewChild('toggler') toggler: ElementRef
   constructor(
     private el: ElementRef
   ) { }
@@ -28,11 +30,19 @@ export class CollapsibleComponent implements OnInit, AfterContentInit, AfterView
 ngAfterViewInit() {
   const content = (this.el.nativeElement as HTMLElement).querySelector('.collapse_content') as HTMLElement;
   content.style.height = '0px';
+
+  if (this.openByDefault) {
+    setTimeout(() => {
+      this.toggle()    
+    });
+  }
 }
   toggle() {
     this.isHidden = !this.isHidden;
 
-    console.log('toggle', this.isHidden);
+    const toggleIcon = this.toggler.nativeElement as HTMLSpanElement
+    this.isHidden ? toggleIcon.classList.remove('open') : toggleIcon.classList.add('open')
+
     if (this.isHidden) {
       this.expanded.emit(false);
     } else {

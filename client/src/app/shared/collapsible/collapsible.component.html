@@ -1,10 +1,10 @@
 <div class="collapse_wrapper">
   <div class="collapse_icon">
-    <span (click)="toggle()">Toggle</span>
+    <span #toggler (click)="toggle()" class="icon-right-arrow toggler_icon"></span>
     <span *ngIf="title">{{title}}</span>
   </div>
   <div class="collapse_content" [ngStyle]="{
-    'height': isHidden ? '0px' : height+'px'
+    'height': isHidden ? '0px' : '90px'
   }">
     <ng-content></ng-content>
   </div>

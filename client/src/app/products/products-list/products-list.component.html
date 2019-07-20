@@ -6,7 +6,7 @@
       [infiniteScrollDistance]="1" 
       [infiniteScrollThrottle]="100" 
       (scrolled)="paginateOnScroll.emit(true)">
-        <div class="col-12 col-md-6 col-lg-4" *ngFor="let product of products">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-4" *ngFor="let product of products">
             <app-product [product]="product"></app-product>
           </div>
       </div>
